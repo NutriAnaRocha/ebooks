@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guia Completo para Pacientes em Uso de Canetas Emagrecedoras — Ana Luisa Rocha</title>
+<style>
+/* ============ FONTES DA MARCA ============ */
+@font-face{font-family:"Merienda";src:url("fonts/Merienda-VariableFont_wght.ttf") format("truetype");font-weight:300 900;font-display:swap}
+@font-face{font-family:"Montserrat";src:url("fonts/Montserrat-Regular.ttf") format("truetype");font-weight:400;font-display:swap}
+@font-face{font-family:"Montserrat";src:url("fonts/Montserrat-Medium.ttf") format("truetype");font-weight:500;font-display:swap}
+@font-face{font-family:"Montserrat";src:url("fonts/Montserrat-SemiBold.ttf") format("truetype");font-weight:600;font-display:swap}
+@font-face{font-family:"Montserrat";src:url("fonts/Montserrat-Bold.ttf") format("truetype");font-weight:700;font-display:swap}
+
+/* ============ TOKENS — Identidade Ana Luisa Rocha ============ */
+:root{
+  --vinho:#7B284C; --vinho-2:#9C3D63; --vinho-soft:#9C3D63; --vinho-escuro:#5E1D3A;
+  --rosa:#F4DCE5; --rosa-2:#FBEEF3; --rosa-3:#FDF7FA;
+  --grafite:#3C3C3C; --cinza:#8A8A8A; --cinza-c:#F5F5F5;
+  --branco:#fff; --ouro:#9C3D63; --ouro-2:#c98aa6;
+  --linha:#E7E7EA; --ok:#3f7d6b; --alerta:#b7791f;
+  --serif:"Merienda","Georgia",serif;
+  --sans:"Montserrat","Segoe UI",system-ui,-apple-system,sans-serif;
+  --r:20px; --sh:0 24px 60px rgba(123,40,76,.12),0 10px 24px rgba(60,60,60,.10);
+  --sh-sm:0 4px 12px rgba(60,60,60,.06),0 12px 28px rgba(123,40,76,.07);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);color:var(--grafite);line-height:1.65;-webkit-font-smoothing:antialiased;
+  background:
+    radial-gradient(1200px 600px at 80% -10%, var(--rosa-2), transparent 60%),
+    radial-gradient(900px 500px at -10% 110%, var(--rosa-2), transparent 55%),
+    var(--cinza-c);
+  min-height:100vh}
+img{max-width:100%}
+a{color:var(--vinho)}
+
+/* ============ PROGRESS BAR ============ */
+#topbar{position:fixed;top:0;left:0;right:0;height:4px;background:rgba(123,40,76,.12);z-index:80}
+#topbar>i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--vinho),var(--vinho-2));transition:width .4s ease}
+
+/* ============ READER / LIVRO ============ */
+#reader{max-width:880px;margin:0 auto;padding:54px 24px 130px}
+.book{position:relative;background:var(--branco);border-radius:var(--r);box-shadow:var(--sh);
+  padding:0;overflow:hidden;border:1px solid rgba(123,40,76,.06)}
+/* lombada decorativa à esquerda */
+.book::before{content:"";position:absolute;left:0;top:0;bottom:0;width:7px;
+  background:linear-gradient(180deg,var(--vinho),var(--vinho-escuro));z-index:5}
+.runhead{display:flex;align-items:center;gap:12px;padding:18px 40px;border-bottom:1px solid var(--linha);
+  background:linear-gradient(180deg,var(--rosa-3),#fff)}
+.runhead img{height:26px;width:auto}
+.runhead .ch{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--vinho-soft);font-weight:600}
+.runhead .pg{margin-left:auto;font-family:var(--serif);font-size:13px;color:var(--cinza)}
+.runhead.hide{display:none}
+#main{padding:46px 56px 54px}
+.page{display:none}
+.page.show{display:block;animation:turn .5s cubic-bezier(.22,.61,.36,1)}
+@keyframes turn{from{opacity:0;transform:translateX(26px) rotateY(2deg)}to{opacity:1;transform:none}}
+
+/* ============ SETAS LATERAIS (virar página) ============ */
+.arrow{position:fixed;top:50%;transform:translateY(-50%);width:54px;height:54px;border-radius:50%;
+  background:#fff;border:1px solid var(--linha);box-shadow:var(--sh-sm);cursor:pointer;z-index:70;
+  display:flex;align-items:center;justify-content:center;color:var(--vinho);font-size:24px;transition:.18s;font-family:var(--serif)}
+.arrow:hover{background:var(--vinho);color:#fff;border-color:var(--vinho)}
+.arrow.left{left:max(16px,calc(50% - 520px))}
+.arrow.right{right:max(16px,calc(50% - 520px))}
+.arrow[disabled]{opacity:.3;pointer-events:none}
+
+/* ============ BARRA INFERIOR ============ */
+.botbar{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:70;
+  display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--linha);
+  box-shadow:var(--sh);border-radius:999px;padding:7px 8px}
+.botbar button{border:none;background:transparent;font-family:var(--sans);font-weight:600;font-size:13px;
+  color:var(--vinho);cursor:pointer;padding:9px 16px;border-radius:999px;display:flex;align-items:center;gap:7px}
+.botbar button:hover{background:var(--rosa-2)}
+.botbar .sep{width:1px;height:22px;background:var(--linha)}
+.botbar .count{font-family:var(--serif);font-size:13px;color:var(--cinza);padding:0 12px;white-space:nowrap}
+.botbar .nav-mini{display:none}
+
+/* ============ SUMÁRIO (overlay) ============ */
+#toc{position:fixed;inset:0;z-index:90;background:rgba(94,29,58,.55);backdrop-filter:blur(6px);
+  display:none;align-items:center;justify-content:center;padding:24px}
+#toc.open{display:flex;animation:fade .25s ease}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+.toc-card{background:#fff;border-radius:24px;max-width:560px;width:100%;max-height:86vh;overflow:auto;
+  box-shadow:var(--sh);padding:34px 34px 26px;position:relative}
+.toc-card .x{position:absolute;top:18px;right:20px;border:none;background:var(--rosa-2);width:38px;height:38px;
+  border-radius:50%;cursor:pointer;color:var(--vinho);font-size:18px}
+.toc-card h3{font-family:var(--serif);color:var(--vinho);font-size:24px;margin-bottom:4px}
+.toc-card .sub{color:var(--cinza);font-size:13px;margin-bottom:18px}
+.toc-list a{display:flex;align-items:center;gap:14px;padding:13px 14px;border-radius:14px;text-decoration:none;
+  color:var(--grafite);border:1px solid transparent;transition:.15s}
+.toc-list a:hover{background:var(--rosa-3);border-color:var(--linha)}
+.toc-list a.active{background:linear-gradient(135deg,var(--vinho),var(--vinho-2));color:#fff}
+.toc-list a .ix{width:38px;height:38px;border-radius:11px;background:var(--rosa-2);color:var(--vinho);
+  display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.toc-list a.active .ix{background:rgba(255,255,255,.18);color:#fff}
+.toc-list a b{font-family:var(--serif);font-size:16px;font-weight:600;display:block}
+.toc-list a small{display:block;font-size:11.5px;color:var(--cinza);font-weight:500}
+.toc-list a.active small{color:var(--rosa)}
+.toc-list a .dn{margin-left:auto;color:var(--ok);font-weight:700;font-size:13px;opacity:0}
+.toc-list a.done .dn{opacity:1}
+.toc-list a.active.done .dn{color:#fff}
+.toc-list .num{font-family:var(--serif);font-size:13px;color:var(--ouro-2);width:18px;text-align:center;flex:0 0 auto}
+
+/* ============ TIPOGRAFIA / CONTEÚDO ============ */
+.eyebrow{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--vinho-soft);font-weight:600;margin-bottom:10px}
+h1{font-family:var(--serif);font-size:38px;line-height:1.15;color:var(--vinho);margin-bottom:14px;font-weight:700}
+h2{font-family:var(--serif);font-size:25px;color:var(--vinho);margin:34px 0 14px;font-weight:600}
+h3{font-family:var(--serif);font-size:19px;color:var(--grafite);margin:24px 0 10px;font-weight:600}
+p{margin-bottom:14px;color:#5a5557;font-size:15.5px}
+.lead{font-size:17px;color:var(--grafite)}
+ul,ol{margin:0 0 16px 22px;color:#5a5557}
+li{margin-bottom:7px}
+strong{color:var(--grafite);font-weight:600}
+
+.card{background:#fff;border:1px solid var(--linha);border-radius:var(--r);padding:24px 26px;box-shadow:var(--sh-sm);margin:18px 0}
+.grid{display:grid;gap:16px}.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}
+.icard{background:#fff;border:1px solid var(--linha);border-radius:16px;padding:20px;box-shadow:var(--sh-sm)}
+.icard .ic{width:42px;height:42px;border-radius:12px;background:var(--rosa-2);color:var(--vinho);display:flex;align-items:center;justify-content:center;margin-bottom:12px}
+.icard h4{font-family:var(--serif);color:var(--vinho);font-size:17px;margin-bottom:6px;font-weight:600}
+.icard p{font-size:14px;margin:0}
+.tip{display:flex;gap:14px;background:linear-gradient(135deg,var(--rosa-3),#fff);border:1px solid var(--rosa);
+  border-left:4px solid var(--vinho);border-radius:14px;padding:16px 18px;margin:18px 0}
+.tip .ic{color:var(--vinho);flex:0 0 auto}.tip b{color:var(--vinho)}
+.tip p{margin:0;font-size:14.5px;color:var(--grafite)}
+.warn{border-color:#f0d9c2;border-left-color:var(--alerta);background:linear-gradient(135deg,#fdf6ee,#fff)}
+.warn .ic{color:var(--alerta)}
+.disc{font-size:12.5px;color:var(--cinza);background:var(--cinza-c);border:1px dashed var(--linha);border-radius:12px;padding:14px 16px;margin:18px 0}
+
+table{width:100%;border-collapse:collapse;margin:16px 0;background:#fff;border-radius:14px;overflow:hidden;box-shadow:var(--sh-sm)}
+th,td{padding:13px 15px;text-align:left;font-size:14px;vertical-align:top;border-bottom:1px solid var(--linha)}
+th{background:var(--vinho);color:#fff;font-weight:600;font-size:12.5px}
+tr:last-child td{border-bottom:none}tr:nth-child(even) td{background:var(--rosa-3)}
+
+.check{list-style:none;margin:14px 0;padding:0}
+.check li{display:flex;align-items:flex-start;gap:12px;padding:12px 14px;background:#fff;border:1px solid var(--linha);
+  border-radius:12px;margin-bottom:9px;cursor:pointer;transition:.15s;font-size:14.5px;color:var(--grafite)}
+.check li:hover{border-color:var(--vinho-soft)}
+.check li .box{width:22px;height:22px;border:2px solid var(--vinho-soft);border-radius:7px;flex:0 0 auto;margin-top:1px;
+  display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:700;transition:.15s}
+.check li.on{background:var(--rosa-3);border-color:var(--vinho)}
+.check li.on .box{background:var(--vinho);border-color:var(--vinho)}
+.check li.on span{text-decoration:line-through;color:var(--cinza)}
+
+label.fld{display:block;font-size:13px;font-weight:600;color:var(--vinho);margin:14px 0 6px}
+input.f,textarea.f,select.f{width:100%;border:1px solid var(--linha);border-radius:12px;padding:12px 14px;
+  font-family:var(--sans);font-size:14.5px;color:var(--grafite);background:#fff;transition:.15s}
+input.f:focus,textarea.f:focus,select.f:focus{outline:none;border-color:var(--vinho-soft);box-shadow:0 0 0 3px rgba(123,40,76,.18)}
+textarea.f{min-height:90px;resize:vertical}
+.saved-note{font-size:12px;color:var(--ok);opacity:0;transition:.3s}.saved-note.show{opacity:1}
+
+.btn{display:inline-flex;align-items:center;gap:9px;background:linear-gradient(135deg,var(--vinho),var(--vinho-2));
+  color:#fff;border:none;padding:14px 26px;border-radius:13px;font-size:14.5px;font-weight:600;cursor:pointer;
+  font-family:var(--sans);box-shadow:var(--sh-sm);transition:.18s;text-decoration:none}
+.btn:hover{transform:translateY(-2px);box-shadow:var(--sh)}
+.btn.ghost{background:#fff;color:var(--vinho);border:1px solid var(--linha)}
+.pager{display:flex;justify-content:space-between;gap:14px;margin-top:46px;border-top:1px solid var(--linha);padding-top:26px}
+
+.quiz .q{background:#fff;border:1px solid var(--linha);border-radius:16px;padding:20px 22px;margin-bottom:16px;box-shadow:var(--sh-sm)}
+.quiz .q p.qt{font-weight:600;color:var(--grafite);font-size:15.5px;margin-bottom:14px}
+.quiz .opts{display:flex;gap:12px}
+.quiz .opt{flex:1;border:1.5px solid var(--linha);border-radius:11px;padding:12px;text-align:center;cursor:pointer;font-weight:600;color:var(--cinza);transition:.15s;background:#fff}
+.quiz .opt:hover{border-color:var(--vinho-soft)}
+.quiz .opt.sel{border-color:var(--vinho);background:var(--rosa-3);color:var(--vinho)}
+.quiz .fb{margin-top:13px;font-size:13.5px;padding:11px 14px;border-radius:10px;display:none}
+.quiz .fb.show{display:block}.quiz .fb.ok{background:#e8f3ef;color:var(--ok)}.quiz .fb.no{background:#fbeaea;color:#a23b3b}
+.quiz-score{font-family:var(--serif);font-size:20px;color:var(--vinho);text-align:center;padding:18px;background:var(--rosa-2);border-radius:14px;margin-top:10px;display:none}
+.quiz-score.show{display:block}
+
+.water-wrap{display:flex;gap:26px;flex-wrap:wrap;align-items:center}
+.cups{display:flex;flex-wrap:wrap;gap:12px;max-width:520px}
+.cup{width:46px;height:58px;cursor:pointer;transition:.15s;color:var(--linha)}
+.cup:hover{transform:translateY(-3px)}
+.water-meta{flex:1;min-width:200px}
+.water-meta .big{font-family:var(--serif);font-size:38px;color:var(--vinho)}
+.calc{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;margin-top:8px}.calc .fld{margin:0}
+
+.rfilter{display:flex;gap:9px;flex-wrap:wrap;margin:18px 0 22px}
+.chip{border:1.5px solid var(--linha);background:#fff;color:var(--cinza);padding:9px 16px;border-radius:30px;font-size:13px;font-weight:600;cursor:pointer;transition:.15s}
+.chip:hover{border-color:var(--vinho-soft)}.chip.on{background:var(--vinho);color:#fff;border-color:var(--vinho)}
+.recipes{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.recipe{background:#fff;border:1px solid var(--linha);border-radius:16px;overflow:hidden;box-shadow:var(--sh-sm);display:flex;flex-direction:column}
+.recipe .rh{padding:16px 18px;background:linear-gradient(135deg,var(--rosa-3),#fff);border-bottom:1px solid var(--linha)}
+.recipe .rh .tag{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--vinho-soft);font-weight:700}
+.recipe .rh h4{font-family:var(--serif);color:var(--vinho);font-size:17px;margin:5px 0 0;font-weight:600}
+.recipe .prot{display:inline-flex;align-items:center;gap:6px;background:var(--vinho);color:#fff;font-size:11.5px;font-weight:700;padding:5px 11px;border-radius:20px;margin-top:9px}
+.recipe .rb{padding:16px 18px;font-size:13.5px}
+.recipe .rb h5{font-size:11.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--vinho-soft);margin:10px 0 5px;font-weight:700}
+.recipe .rb ul{margin:0 0 0 18px;color:var(--cinza)}.recipe .rb p{font-size:13.5px;margin:0;color:var(--cinza)}
+
+/* ============ CAPA DO LIVRO ============ */
+.cover{position:relative;text-align:center;padding:30px 30px 8px}
+.cover .frame{border:1.5px solid var(--rosa);border-radius:16px;padding:46px 34px 40px;
+  background:linear-gradient(180deg,#fff,var(--rosa-3));position:relative;overflow:hidden}
+.cover .frame::before{content:"";position:absolute;width:280px;height:280px;border-radius:50%;
+  background:radial-gradient(circle,var(--rosa-2),transparent 70%);top:-130px;right:-90px}
+.cover .logo{height:54px;width:auto;margin-bottom:6px;position:relative}
+.cover .ce{font-size:11.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--vinho-soft);font-weight:600;margin:18px 0 12px;position:relative}
+.cover h1{color:var(--vinho);font-size:36px;line-height:1.12;margin:0 auto 16px;max-width:560px;position:relative}
+.cover .rule{width:70px;height:3px;background:var(--vinho);margin:0 auto 18px;border-radius:3px;position:relative}
+.cover p.sub{color:#5a5557;font-size:16px;max-width:480px;margin:0 auto 26px;position:relative}
+.cover .seal{display:inline-flex;gap:9px;align-items:center;background:var(--rosa-2);color:var(--vinho);
+  border:1px solid var(--rosa);padding:8px 16px;border-radius:30px;font-size:12.5px;font-weight:600;position:relative}
+.cover .cta{margin-top:26px;position:relative}
+.stat{display:flex;gap:14px;flex-wrap:wrap;margin:26px 0 6px}
+.stat .s{flex:1;min-width:120px;background:#fff;border:1px solid var(--linha);border-radius:14px;padding:16px;text-align:center;box-shadow:var(--sh-sm)}
+.stat .s b{display:block;font-family:var(--serif);font-size:28px;color:var(--vinho)}
+.stat .s span{font-size:12.5px;color:var(--cinza)}
+
+.footer{margin-top:54px;padding-top:24px;border-top:1px solid var(--linha);font-size:12px;color:var(--cinza)}
+.footer img{height:22px;margin-bottom:10px}
+
+/* ============ RESPONSIVO ============ */
+@media(max-width:920px){
+  .arrow{display:none}
+  #reader{padding:34px 12px 110px}
+  #main{padding:30px 22px 40px}
+  .runhead{padding:14px 22px}
+  h1{font-size:30px}.cover h1{font-size:28px}
+  .g2,.g3,.recipes{grid-template-columns:1fr}
+  .quiz .opts{flex-direction:column}
+  .botbar .nav-mini{display:flex}
+}
+@media print{
+  #topbar,.arrow,.botbar,#toc,.runhead,.pager,.btn{display:none!important}
+  body{background:#fff}.book{box-shadow:none;border:none}.book::before{display:none}
+  #reader{padding:0;max-width:100%}.page{display:block!important;page-break-after:always}
+  #main{padding:0}
+}
+</style>
+</head>
+<body>
+<div id="topbar"><i></i></div>
+
+<button class="arrow left" id="prevBtn" aria-label="Página anterior">‹</button>
+<button class="arrow right" id="nextBtn" aria-label="Próxima página">›</button>
+
+<div id="reader">
+  <div class="book" id="book">
+    <header class="runhead" id="runhead">
+      <img src="img/logo-ana-full.png" alt="Ana Luisa Rocha — Nutricionista">
+      <span class="ch" id="chLabel"></span>
+      <span class="pg" id="pgLabel"></span>
+    </header>
+    <main id="main"></main>
+  </div>
+</div>
+
+<div class="botbar">
+  <button id="prevMini" class="nav-mini" aria-label="Anterior">‹</button>
+  <button id="tocOpen">☰ Sumário</button>
+  <span class="sep"></span>
+  <span class="count" id="counter"></span>
+  <button id="nextMini" class="nav-mini" aria-label="Próximo">›</button>
+</div>
+
+<!-- SUMÁRIO -->
+<div id="toc">
+  <div class="toc-card">
+    <button class="x" id="tocClose">✕</button>
+    <h3>Sumário</h3>
+    <div class="sub">Guia Completo para Pacientes em Uso de Canetas Emagrecedoras</div>
+    <nav class="toc-list" id="tocList"></nav>
+  </div>
+</div>
+
+<script>
+/* =================== ICONS =================== */
+const I=(p,e="")=>`<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" ${e}>${p}</svg>`;
+const ICON={
+  home:I('<path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/>'),
+  pill:I('<rect x="3" y="8" width="18" height="8" rx="4"/><path d="M12 8v8"/>'),
+  fork:I('<path d="M6 3v7a2 2 0 002 2v9"/><path d="M10 3v7"/><path d="M14 3c0 4 1 5 3 5v13"/>'),
+  drop:I('<path d="M12 3s6 6 6 11a6 6 0 01-12 0c0-5 6-11 6-11z"/>'),
+  shield:I('<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3z"/>'),
+  muscle:I('<path d="M5 12c2-3 5-3 7 0M3 18c1-2 3-3 5-3M19 8a3 3 0 11-4 3l-3 5"/>'),
+  heart:I('<path d="M12 20s-7-4.5-9-9a4.5 4.5 0 019-1 4.5 4.5 0 019 1c-2 4.5-9 9-9 9z"/>'),
+  chef:I('<path d="M6 14h12v5H6z"/><path d="M8 14a4 4 0 01-1-7.7A3.5 3.5 0 0112 4a3.5 3.5 0 015 2.3A4 4 0 0116 14"/>'),
+  chart:I('<path d="M4 19V5M4 19h16M8 16v-4M12 16V8M16 16v-6"/>'),
+  star:I('<path d="M12 3l2.6 5.3 5.8.8-4.2 4.1 1 5.8L12 16.8 6.8 19l1-5.8L3.6 9.1l5.8-.8L12 3z"/>'),
+  book:I('<path d="M4 5a2 2 0 012-2h13v18H6a2 2 0 01-2-2V5z"/><path d="M19 17H6"/>'),
+  warn:I('<path d="M12 3l9 16H3l9-16z"/><path d="M12 10v4M12 17.5v.5"/>'),
+  scale:I('<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>'),
+  flame:I('<path d="M12 3c1 3-2 4-2 7a2 2 0 004 0c0-1 0-2 1-3 2 2 3 4 3 7a6 6 0 01-12 0c0-4 4-6 6-11z"/>'),
+  cup:c=>`<svg class="cup ${c?'on':''}" viewBox="0 0 24 30" fill="${c?'#bfe0f0':'none'}" stroke="${c?'#5aa9d6':'#E7E7EA'}" stroke-width="1.6" stroke-linejoin="round"><path d="M4 4h16l-1.5 22a2 2 0 01-2 1.8H7.5a2 2 0 01-2-1.8L4 4z"/><path d="M4.6 11h14.8"/></svg>`
+};
+
+/* =================== STORE =================== */
+const KEY="ebook_canetas_ana_v1";
+let store=JSON.parse(localStorage.getItem(KEY)||"{}");
+const save=()=>localStorage.setItem(KEY,JSON.stringify(store));
+const get=(k,d)=>store[k]===undefined?d:store[k];
+const set=(k,v)=>{store[k]=v;save();};
+
+/* =================== RECEITAS =================== */
+const RECIPES=[
+{c:"cafe",n:"Ovos mexidos cremosos com queijo",p:"22 g",ing:["2 ovos","1 fatia de queijo minas","1 col. chá de azeite","Cebolinha a gosto"],mp:"Bata os ovos, leve à frigideira em fogo baixo com o azeite, mexendo até cremoso. Acrescente o queijo picado no fim."},
+{c:"cafe",n:"Iogurte natural com chia e frutas",p:"18 g",ing:["1 pote de iogurte natural integral","1 col. sopa de chia","1/2 banana","Canela"],mp:"Misture a chia ao iogurte e deixe 5 min. Cubra com a banana fatiada e canela."},
+{c:"cafe",n:"Panqueca proteica de banana",p:"20 g",ing:["1 ovo","1/2 banana","2 col. sopa de aveia","1 scoop de whey (opcional)"],mp:"Amasse tudo, faça pequenas panquecas em frigideira antiaderente, 2 min de cada lado."},
+{c:"cafe",n:"Tapioca com ovo e queijo",p:"19 g",ing:["2 col. sopa de goma de tapioca","1 ovo","1 fatia de queijo"],mp:"Espalhe a goma na frigideira, recheie com o ovo mexido e o queijo, dobre."},
+{c:"cafe",n:"Omelete de espinafre",p:"21 g",ing:["2 ovos","1 punhado de espinafre","1 col. sopa de queijo ralado","Sal e pimenta"],mp:"Refogue o espinafre, junte os ovos batidos e o queijo, cozinhe em fogo médio."},
+{c:"cafe",n:"Vitamina proteica de morango",p:"25 g",ing:["200 ml de leite","1 scoop de whey","5 morangos","Gelo"],mp:"Bata tudo no liquidificador até ficar cremoso. Sirva gelado."},
+{c:"cafe",n:"Pão integral com pasta de atum",p:"23 g",ing:["1 fatia de pão integral","1/2 lata de atum","1 col. sopa de iogurte","Limão"],mp:"Misture o atum com o iogurte e o limão, espalhe sobre o pão."},
+{c:"cafe",n:"Mingau de aveia com whey",p:"24 g",ing:["3 col. sopa de aveia","200 ml de leite","1 scoop de whey","Canela"],mp:"Cozinhe a aveia no leite por 3 min, retire do fogo e misture o whey fora do calor."},
+{c:"cafe",n:"Cottage com tomate e orégano",p:"17 g",ing:["4 col. sopa de queijo cottage","1 tomate","Azeite e orégano"],mp:"Tempere o cottage, sirva com o tomate picado e fio de azeite."},
+{c:"cafe",n:"Crepioca recheada com frango",p:"26 g",ing:["1 ovo","2 col. sopa de goma de tapioca","3 col. sopa de frango desfiado"],mp:"Misture ovo e goma, faça o disco na frigideira e recheie com o frango."},
+{c:"lanche",n:"Mix de castanhas e iogurte",p:"15 g",ing:["1 pote de iogurte natural","1 punhado pequeno de castanhas"],mp:"Sirva o iogurte com as castanhas por cima."},
+{c:"lanche",n:"Ovos cozidos temperados",p:"13 g",ing:["2 ovos","Sal, pimenta e azeite"],mp:"Cozinhe os ovos por 8 min, descasque e tempere."},
+{c:"lanche",n:"Queijo minas com tomate-cereja",p:"14 g",ing:["50 g de queijo minas","6 tomates-cereja","Azeite"],mp:"Monte em espetinhos ou sirva picado com fio de azeite."},
+{c:"lanche",n:"Shake de whey com cacau",p:"24 g",ing:["1 scoop de whey","200 ml de leite","1 col. chá de cacau"],mp:"Bata tudo na coqueteleira ou liquidificador."},
+{c:"lanche",n:"Homus com palitos de pepino",p:"9 g",ing:["3 col. sopa de homus","1 pepino em palitos"],mp:"Sirva o homus com os palitos para mergulhar."},
+{c:"lanche",n:"Rolinho de peito de peru e queijo",p:"16 g",ing:["3 fatias de peito de peru","2 fatias de queijo"],mp:"Enrole o queijo dentro do peito de peru."},
+{c:"lanche",n:"Edamame cozido",p:"12 g",ing:["1 xícara de edamame","Sal grosso"],mp:"Cozinhe em água com sal por 5 min, escorra."},
+{c:"lanche",n:"Smoothie de iogurte e frutas vermelhas",p:"18 g",ing:["1 pote de iogurte","1/2 xícara de frutas vermelhas","Gelo"],mp:"Bata tudo até cremoso."},
+{c:"lanche",n:"Cottage com pera",p:"13 g",ing:["4 col. sopa de cottage","1/2 pera","Canela"],mp:"Sirva o cottage com a pera fatiada e canela."},
+{c:"lanche",n:"Pasta de ricota com torrada",p:"14 g",ing:["3 col. sopa de ricota","1 torrada integral","Ervas"],mp:"Tempere a ricota e espalhe sobre a torrada."},
+{c:"almoco",n:"Frango grelhado com legumes",p:"35 g",ing:["1 filé de frango","Abobrinha e cenoura","Azeite e ervas"],mp:"Grelhe o frango temperado e refogue os legumes em fios de azeite."},
+{c:"almoco",n:"Salmão assado com purê de abóbora",p:"34 g",ing:["1 posta de salmão","200 g de abóbora","Azeite"],mp:"Asse o salmão por 15 min. Cozinhe e amasse a abóbora com azeite."},
+{c:"almoco",n:"Carne magra com arroz integral",p:"32 g",ing:["120 g de patinho","4 col. sopa de arroz integral","Salada verde"],mp:"Grelhe a carne, sirva com o arroz e a salada."},
+{c:"almoco",n:"Omelete recheado com frango",p:"30 g",ing:["3 ovos","3 col. sopa de frango desfiado","Queijo"],mp:"Faça o omelete e recheie com o frango e queijo."},
+{c:"almoco",n:"Strogonoff de frango leve",p:"33 g",ing:["1 filé de frango em cubos","2 col. sopa de iogurte","Mostarda","Cogumelos"],mp:"Refogue o frango, junte cogumelos, iogurte e mostarda fora do fogo forte."},
+{c:"almoco",n:"Tilápia com legumes no vapor",p:"31 g",ing:["1 filé de tilápia","Brócolis e couve-flor","Limão"],mp:"Cozinhe o peixe no vapor com limão e sirva com os legumes."},
+{c:"almoco",n:"Quibe de forno com salada",p:"28 g",ing:["120 g de carne moída magra","Trigo para quibe","Hortelã"],mp:"Misture, asse em forma untada por 25 min e sirva com salada."},
+{c:"almoco",n:"Frango xadrez com poucos carboidratos",p:"34 g",ing:["1 filé em cubos","Pimentões","Shoyu light"],mp:"Salteie o frango e os pimentões com shoyu em fogo alto."},
+{c:"almoco",n:"Almôndegas ao sugo",p:"30 g",ing:["120 g de carne moída","Molho de tomate caseiro","Manjericão"],mp:"Modele as almôndegas, cozinhe no molho por 15 min."},
+{c:"almoco",n:"Bowl de grão-de-bico e frango",p:"32 g",ing:["1/2 xícara de grão-de-bico","1 filé de frango","Folhas verdes","Azeite"],mp:"Monte o bowl com o grão-de-bico, frango grelhado e folhas."},
+{c:"jantar",n:"Sopa cremosa de abóbora com frango",p:"24 g",ing:["200 g de abóbora","3 col. sopa de frango desfiado","Gengibre"],mp:"Cozinhe a abóbora, bata, volte ao fogo com o frango e gengibre."},
+{c:"jantar",n:"Omelete leve de claras com legumes",p:"20 g",ing:["3 claras + 1 ovo","Tomate e cebola","Sal"],mp:"Bata os ovos e faça o omelete com os legumes picados."},
+{c:"jantar",n:"Caldo de legumes com carne desfiada",p:"23 g",ing:["Abobrinha, cenoura, chuchu","80 g de músculo desfiado"],mp:"Cozinhe os legumes no caldo, junte a carne desfiada."},
+{c:"jantar",n:"Wrap de alface com frango",p:"26 g",ing:["Folhas de alface","Frango desfiado","Cenoura ralada"],mp:"Use a alface como base e enrole o recheio."},
+{c:"jantar",n:"Ovos pochê sobre purê de couve-flor",p:"19 g",ing:["2 ovos","200 g de couve-flor","Azeite"],mp:"Cozinhe e amasse a couve-flor; faça os ovos pochê por cima."},
+{c:"jantar",n:"Berinjela recheada com carne",p:"25 g",ing:["1 berinjela","100 g de carne moída magra","Tomate"],mp:"Asse a berinjela, recheie com a carne refogada e gratine."},
+{c:"jantar",n:"Creme de espinafre com ricota",p:"18 g",ing:["Espinafre","4 col. sopa de ricota","Alho"],mp:"Refogue o espinafre com alho e misture a ricota até cremoso."},
+{c:"jantar",n:"Peixe ao papillote",p:"30 g",ing:["1 filé de peixe branco","Tomate e ervas","Limão"],mp:"Embrulhe o peixe com os temperos no papel-alumínio e asse 20 min."},
+{c:"jantar",n:"Panqueca de frango ao forno",p:"27 g",ing:["1 crepioca","Frango desfiado","Molho de tomate"],mp:"Recheie a crepioca, cubra com molho e leve ao forno 10 min."},
+{c:"jantar",n:"Salada morna de atum",p:"28 g",ing:["1 lata de atum","Folhas verdes","Ovo cozido","Azeite"],mp:"Misture o atum às folhas, finalize com o ovo e azeite."},
+{c:"nausea",n:"Mingau leve de arroz",p:"6 g",ing:["3 col. sopa de arroz cozido","Água ou caldo leve"],mp:"Cozinhe o arroz em bastante líquido até desmanchar; sirva morno."},
+{c:"nausea",n:"Gelatina + iogurte gelado",p:"10 g",ing:["1 pote de iogurte natural","Gelatina sem açúcar"],mp:"Sirva bem gelado; texturas frias costumam ser melhor toleradas."},
+{c:"nausea",n:"Caldo de frango coado",p:"9 g",ing:["Caldo caseiro de frango coado","Pitada de sal"],mp:"Sirva morno, em pequenos goles ao longo do tempo."},
+{c:"nausea",n:"Banana amassada com aveia",p:"5 g",ing:["1/2 banana madura","1 col. sopa de aveia fina"],mp:"Amasse a banana e misture a aveia; coma devagar."},
+{c:"nausea",n:"Água de coco com torrada",p:"3 g",ing:["1 copo de água de coco","1 torrada simples"],mp:"Beba a água de coco em goles e belisque a torrada seca."}
+];
+
+/* =================== PÁGINAS =================== */
+const PAGES=[
+ {id:"capa",   t:"Capa",         st:"Início",                       ic:ICON.home},
+ {id:"bemvindo",t:"Boas-vindas", st:"Como usar este guia",          ic:ICON.book},
+ {id:"m1",t:"Entendendo o tratamento",st:"Como as canetas funcionam",ic:ICON.pill},
+ {id:"m2",t:"Alimentação",            st:"O que comer durante",      ic:ICON.fork},
+ {id:"m3",t:"Hidratação",             st:"Água e seu rastreador",    ic:ICON.drop},
+ {id:"m4",t:"Efeitos colaterais",     st:"Sintomas e estratégias",   ic:ICON.shield},
+ {id:"m5",t:"Massa muscular",         st:"Preservar o músculo",      ic:ICON.muscle},
+ {id:"m6",t:"Saúde emocional",        st:"Fome física x emocional",  ic:ICON.heart},
+ {id:"m7",t:"Receitas práticas",      st:"45 receitas proteicas",    ic:ICON.chef},
+ {id:"m8",t:"Plano de acompanhamento",st:"Registre sua evolução",    ic:ICON.chart}
+];
+
+/* builders */
+function checklist(items,key){return `<ul class="check" data-ck="${key}">`+items.map((t,i)=>`<li data-i="${i}"><span class="box"></span><span>${t}</span></li>`).join("")+`</ul>`;}
+function field(label,key,type="text",ph=""){return type==="textarea"?`<label class="fld">${label}</label><textarea class="f" data-fld="${key}" placeholder="${ph}"></textarea>`:`<label class="fld">${label}</label><input class="f" type="${type}" data-fld="${key}" placeholder="${ph}">`;}
+function pager(p,pt,n,nt){return `<div class="pager">${p?`<button class="btn ghost" onclick="go('${p}')">← ${pt}</button>`:`<span></span>`}${n?`<button class="btn" onclick="go('${n}')">${nt} →</button>`:`<span></span>`}</div>`;}
+const disc=`<div class="disc"><strong>Aviso importante:</strong> este material é educativo e não substitui a orientação do seu médico, nutricionista ou farmacêutico. Dúvidas sobre dose, ajustes e sintomas persistentes devem sempre ser levadas à sua equipe de saúde.</div>`;
+
+/* =================== CONTEÚDO =================== */
+const C={};
+
+C.capa=`
+<div class="cover">
+  <div class="frame">
+    <img class="logo" src="img/logo-ana-full.png" alt="Ana Luisa Rocha — Nutricionista">
+    <div class="ce">E-book digital para pacientes</div>
+    <h1>Guia Completo para Pacientes em Uso de Canetas Emagrecedoras</h1>
+    <div class="rule"></div>
+    <p class="sub">Tudo o que você precisa saber para emagrecer com saúde, preservar sua massa muscular e alcançar resultados duradouros.</p>
+    <span class="seal">${ICON.star} 8 módulos • 45 receitas • interativo</span>
+    <div class="cta"><button class="btn" onclick="go('bemvindo')">Abrir o guia →</button></div>
+  </div>
+  <div class="stat">
+    <div class="s"><b>8</b><span>módulos completos</span></div>
+    <div class="s"><b>45</b><span>receitas proteicas</span></div>
+    <div class="s"><b>100%</b><span>seu progresso salvo</span></div>
+  </div>
+  ${disc}
+</div>`;
+
+C.bemvindo=`
+<div class="eyebrow">Boas-vindas</div>
+<h1>Bem-vinda a uma nova fase</h1>
+<p class="lead">Este guia foi pensado para acompanhar você durante todo o tratamento com canetas emagrecedoras — de forma acolhedora, prática e baseada em educação nutricional.</p>
+<div class="card"><h3>Como aproveitar ao máximo</h3>
+<ul>
+<li>Vire as páginas pelas <strong>setas</strong> ou abra o <strong>Sumário</strong> para pular entre os módulos.</li>
+<li>Marque os checklists e responda aos quizzes — tudo fica salvo no seu aparelho.</li>
+<li>Volte sempre que precisar: este material é seu companheiro de jornada.</li>
+</ul></div>
+<div class="tip">${ICON.heart}<div><b>Lembre-se:</b><p>Emagrecer com saúde é um processo. Pequenas escolhas consistentes valem mais do que perfeição. Seja gentil com você.</p></div></div>
+${disc}
+${pager("capa","Capa","m1","Módulo 1")}`;
+
+C.m1=`
+<div class="eyebrow">Módulo 1</div>
+<h1>Entendendo o tratamento</h1>
+<p class="lead">Compreender como as canetas funcionam ajuda você a ter expectativas realistas e a aproveitar melhor cada etapa.</p>
+<h2>O que são as canetas emagrecedoras</h2>
+<p>São medicamentos injetáveis (como a <strong>semaglutida</strong> e a <strong>tirzepatida</strong>) que imitam hormônios naturais do intestino — os chamados incretínicos. Eles atuam principalmente sobre o apetite e a digestão, sempre sob prescrição médica.</p>
+<h2>Como funcionam no organismo</h2>
+<div class="grid g2">
+<div class="icard"><div class="ic">${ICON.pill}</div><h4>Aumentam a saciedade</h4><p>Você se sente satisfeita comendo menos, com menos fome ao longo do dia.</p></div>
+<div class="icard"><div class="ic">${ICON.flame}</div><h4>Retardam o esvaziamento gástrico</h4><p>O alimento permanece mais tempo no estômago, prolongando a sensação de "cheia".</p></div>
+<div class="icard"><div class="ic">${ICON.heart}</div><h4>Reduzem a "fome de recompensa"</h4><p>Diminui a vontade impulsiva de beliscar e o pensamento constante em comida.</p></div>
+<div class="icard"><div class="ic">${ICON.shield}</div><h4>Ajudam no controle glicêmico</h4><p>Auxiliam na regulação do açúcar no sangue, efeito de origem do tratamento de diabetes.</p></div>
+</div>
+<h2>O que esperar nas primeiras semanas</h2>
+<ul>
+<li>A dose costuma ser <strong>iniciada baixa e aumentada aos poucos</strong>, para o corpo se adaptar.</li>
+<li>É comum notar <strong>menos fome</strong> e saciar-se rápido — coma devagar e pare ao se sentir satisfeita.</li>
+<li>Alguns efeitos leves (enjoo, prisão de ventre) podem aparecer no começo e tendem a melhorar.</li>
+<li>A perda de peso é <strong>gradual</strong>. Constância vale mais que velocidade.</li>
+</ul>
+<div class="tip warn">${ICON.warn}<div><b>Atenção:</b><p>Nunca aumente a dose por conta própria. Ajustes são sempre feitos pelo seu médico.</p></div></div>
+<h2>Mitos e verdades</h2>
+<p>Teste o que você já sabe. Responda <strong>Verdadeiro</strong> ou <strong>Falso</strong>:</p>
+<div class="quiz" id="quiz1" data-quiz="q1"></div>
+${disc}
+${pager("bemvindo","Boas-vindas","m2","Módulo 2")}`;
+
+const QUIZ1=[
+ {q:"As canetas funcionam sozinhas, sem precisar mudar a alimentação.",a:false,e:"Falso. O medicamento ajuda no apetite, mas a alimentação e os hábitos é que sustentam o resultado a longo prazo."},
+ {q:"Sentir menos fome é um efeito esperado do tratamento.",a:true,e:"Verdadeiro. A redução do apetite é um dos principais mecanismos das canetas."},
+ {q:"Posso aumentar a dose sozinha se achar que está fazendo pouco efeito.",a:false,e:"Falso. Qualquer ajuste de dose deve ser feito exclusivamente pelo seu médico."},
+ {q:"Manter a ingestão de proteína é importante para preservar a massa muscular.",a:true,e:"Verdadeiro. Comer menos sem cuidar da proteína pode levar à perda de músculo."},
+ {q:"Comer muito rápido pode piorar enjoos e desconfortos.",a:true,e:"Verdadeiro. Como o estômago esvazia mais devagar, comer rápido sobrecarrega e causa náusea."}
+];
+
+C.m2=`
+<div class="eyebrow">Módulo 2</div>
+<h1>Alimentação durante o tratamento</h1>
+<p class="lead">Comer menos torna cada garfada mais importante. A meta é nutrir bem, com prioridade para proteínas e boa tolerância digestiva.</p>
+<h2>A importância das proteínas</h2>
+<p>Com o apetite reduzido, é fácil comer pouca proteína — e isso custa <strong>massa muscular</strong>. Inclua uma fonte de proteína em <strong>todas</strong> as refeições: ovos, frango, peixe, carne magra, iogurte, queijos, leguminosas.</p>
+<div class="tip">${ICON.muscle}<div><b>Meta prática:</b><p>Comece o prato pela proteína. Assim, mesmo saciando rápido, você garante o mais importante primeiro.</p></div></div>
+<h2>Distribuição das refeições</h2>
+<ul>
+<li>Prefira <strong>refeições menores e mais frequentes</strong> a poucos pratos grandes.</li>
+<li>Não pule refeições só porque "não está com fome" — coma porções pequenas e nutritivas.</li>
+<li>Evite líquidos em grande volume durante a refeição (ocupam espaço e enchem rápido).</li>
+</ul>
+<h2>Mastigação adequada</h2>
+<p>Mastigar bem e devagar é uma das estratégias mais simples e eficazes para evitar enjoos. Pouse o talher entre as garfadas e dê tempo ao seu corpo de sinalizar saciedade.</p>
+<h2>Alimentos geralmente bem tolerados</h2>
+<div class="grid g2">
+<div class="icard"><div class="ic">${ICON.heart}</div><h4>Boas escolhas</h4><p>Ovos, frango grelhado, peixe, iogurte natural, legumes cozidos, sopas leves, frutas macias, arroz, batata.</p></div>
+<div class="icard"><div class="ic">${ICON.warn}</div><h4>Costumam incomodar</h4><p>Frituras, alimentos muito gordurosos, doces concentrados, refrigerantes, álcool, pratos muito condimentados.</p></div>
+</div>
+<h2>Checklist diário de alimentação</h2>
+${checklist(["Incluí proteína em todas as refeições","Mastiguei devagar e com atenção","Fracionei em porções menores","Evitei frituras e excesso de gordura","Priorizei alimentos in natura","Comi com calma, sem distrações"],"m2_check")}
+<h2>Minhas anotações</h2>
+<div class="card">${field("O que caiu bem hoje? O que evitar amanhã?","m2_notes","textarea","Ex.: o iogurte de manhã foi ótimo; almoço gorduroso me deu enjoo.")}<span class="saved-note">Salvo ✓</span></div>
+${disc}
+${pager("m1","Módulo 1","m3","Módulo 3")}`;
+
+C.m3=`
+<div class="eyebrow">Módulo 3</div>
+<h1>Hidratação</h1>
+<p class="lead">Com menos fome, é comum beber menos água sem perceber. A hidratação ajuda no intestino, na disposição e até a diferenciar sede de fome.</p>
+<h2>Por que a água é tão importante</h2>
+<div class="grid g3">
+<div class="icard"><div class="ic">${ICON.drop}</div><h4>Intestino regulado</h4><p>Previne a constipação, um dos desconfortos mais comuns do tratamento.</p></div>
+<div class="icard"><div class="ic">${ICON.flame}</div><h4>Mais disposição</h4><p>A desidratação causa cansaço, dor de cabeça e queda de energia.</p></div>
+<div class="icard"><div class="ic">${ICON.heart}</div><h4>Menos confusão de sinais</h4><p>Muitas vezes a "fome" é sede. Beber água ajuda a interpretar melhor o corpo.</p></div>
+</div>
+<h2>Calcule sua meta de água</h2>
+<div class="card">
+<p>Uma referência geral é <strong>35 ml por quilo de peso</strong> por dia (ajuste com seu profissional).</p>
+<div class="calc"><div class="fld"><label class="fld">Seu peso (kg)</label><input class="f" id="pesoAgua" type="number" placeholder="Ex.: 70" style="max-width:160px"></div>
+<button class="btn" onclick="calcAgua()">Calcular</button></div>
+<p id="metaAgua" style="margin-top:14px;font-family:var(--serif);font-size:19px;color:var(--vinho)"></p>
+</div>
+<h2>Rastreador de consumo de água</h2>
+<p>Toque em cada copo conforme for bebendo (cada copo ≈ 250 ml). O progresso fica salvo no dia.</p>
+<div class="card"><div class="water-wrap">
+<div class="cups" id="cups"></div>
+<div class="water-meta"><div class="big" id="waterTot">0 ml</div><span style="color:var(--cinza)">de água registrada hoje</span>
+<div style="margin-top:12px"><button class="btn ghost" onclick="resetWater()">Zerar o dia</button></div></div>
+</div></div>
+<h2>Sinais de desidratação</h2>
+<ul><li>Urina escura e em pouca quantidade</li><li>Boca seca, lábios rachados</li><li>Dor de cabeça, tontura e cansaço</li><li>Pele menos elástica e prisão de ventre</li></ul>
+<div class="tip">${ICON.drop}<div><b>Dica:</b><p>Beba em pequenos goles ao longo do dia, fora dos horários das refeições, para não encher o estômago e atrapalhar a alimentação.</p></div></div>
+${disc}
+${pager("m2","Módulo 2","m4","Módulo 4")}`;
+
+C.m4=`
+<div class="eyebrow">Módulo 4</div>
+<h1>Efeitos colaterais e estratégias nutricionais</h1>
+<p class="lead">A maioria dos efeitos é leve e passageira, mais comum no início ou após aumento de dose. Veja como aliviar pela alimentação.</p>
+<table><thead><tr><th>Sintoma</th><th>Possível causa</th><th>O que fazer</th></tr></thead><tbody>
+<tr><td><strong>Náusea</strong></td><td>Esvaziamento gástrico mais lento; refeições grandes ou gordurosas</td><td>Porções menores, comer devagar, evitar frituras; alimentos secos e frios costumam ajudar (torrada, gelatina)</td></tr>
+<tr><td><strong>Constipação</strong></td><td>Menos comida, pouca água e fibra</td><td>Aumentar água, fibras (frutas, verduras, aveia) e movimento; conversar com o profissional se persistir</td></tr>
+<tr><td><strong>Azia</strong></td><td>Refluxo do conteúdo gástrico</td><td>Evitar deitar após comer, reduzir gordura/café/cítricos, refeições menores</td></tr>
+<tr><td><strong>Refluxo</strong></td><td>Estômago mais cheio por mais tempo</td><td>Última refeição ao menos 2–3 h antes de deitar; elevar a cabeceira</td></tr>
+<tr><td><strong>Diarreia</strong></td><td>Adaptação intestinal; alimentos gordurosos</td><td>Hidratar bem, preferir alimentos leves e cozidos; repor líquidos</td></tr>
+<tr><td><strong>Perda excessiva de apetite</strong></td><td>Efeito intenso sobre a saciedade</td><td>Priorizar proteína e densidade nutricional em pequenas porções; não pular refeições</td></tr>
+</tbody></table>
+<div class="tip warn">${ICON.warn}<div><b>Procure seu médico se:</b><p>vômitos persistentes, dor abdominal forte, sinais de desidratação, ou qualquer sintoma intenso e que não melhora. Este guia não substitui avaliação médica.</p></div></div>
+<h2>Marque os sintomas que você sentiu</h2>
+${checklist(["Náusea","Constipação","Azia","Refluxo","Diarreia","Perda de apetite acentuada"],"m4_check")}
+<div class="card">${field("Anote quando ocorreu e o que ajudou:","m4_notes","textarea","Ex.: enjoo após o almoço; melhorou com chá de gengibre e refeição menor.")}<span class="saved-note">Salvo ✓</span></div>
+${disc}
+${pager("m3","Módulo 3","m5","Módulo 5")}`;
+
+C.m5=`
+<div class="eyebrow">Módulo 5</div>
+<h1>Preservando a massa muscular</h1>
+<p class="lead">Perder peso é o objetivo — perder músculo, não. Manter a massa magra protege seu metabolismo e ajuda a não recuperar o peso depois.</p>
+<h2>A importância da proteína</h2>
+<p>A proteína é o nutriente que sustenta seus músculos. Mesmo comendo menos, mantê-la alta é prioridade. Distribua ao longo do dia e comece sempre as refeições por ela.</p>
+<div class="grid g2">
+<div class="icard"><div class="ic">${ICON.muscle}</div><h4>Exercícios de força</h4><p>2 a 3 sessões por semana de musculação ou exercícios com o peso do corpo enviam o sinal "preserve o músculo".</p></div>
+<div class="icard"><div class="ic">${ICON.scale}</div><h4>Sono de qualidade</h4><p>Dormir 7–9 h regula hormônios da fome e é quando o corpo se recupera e constrói músculo.</p></div>
+<div class="icard"><div class="ic">${ICON.flame}</div><h4>Recuperação muscular</h4><p>Alterne treinos, hidrate-se e respeite os dias de descanso. Proteína no pós-treino ajuda.</p></div>
+<div class="icard"><div class="ic">${ICON.heart}</div><h4>Movimento diário</h4><p>Caminhar, subir escadas e se manter ativa somam ao longo do dia, além do treino formal.</p></div>
+</div>
+<h2>Checklist semanal de hábitos</h2>
+${checklist(["Fiz exercícios de força (≥2x na semana)","Mantive proteína em todas as refeições","Dormi 7–9 h na maioria das noites","Me movimentei todos os dias (caminhadas)","Respeitei dias de descanso e recuperação","Bebi água adequadamente"],"m5_check")}
+<div class="tip">${ICON.muscle}<div><b>Combinação de ouro:</b><p>Proteína suficiente + treino de força + sono. É esse trio que diferencia "perder peso" de "perder gordura preservando músculo".</p></div></div>
+${disc}
+${pager("m4","Módulo 4","m6","Módulo 6")}`;
+
+C.m6=`
+<div class="eyebrow">Módulo 6</div>
+<h1>Saúde emocional</h1>
+<p class="lead">Emagrecer mexe com a relação que temos com a comida e com o corpo. Cuidar do emocional é parte do tratamento — e merece o mesmo carinho.</p>
+<h2>Fome emocional x fome física</h2>
+<table><thead><tr><th>Fome física</th><th>Fome emocional</th></tr></thead><tbody>
+<tr><td>Surge aos poucos</td><td>Aparece de repente</td></tr>
+<tr><td>Qualquer alimento serve</td><td>Desejo por algo específico (doce, salgado)</td></tr>
+<tr><td>Passa ao se alimentar</td><td>Continua mesmo depois de comer</td></tr>
+<tr><td>Sem culpa depois</td><td>Costuma vir acompanhada de culpa</td></tr>
+</tbody></table>
+<h2>Comer emocional e ansiedade</h2>
+<p>Usar a comida para acalmar emoções é humano e muito comum. O primeiro passo não é se cobrar — é <strong>perceber</strong>. Ao notar vontade de comer fora de hora, pergunte: "É fome ou é sentimento?"</p>
+<div class="tip">${ICON.heart}<div><b>Pausa de 5 minutos:</b><p>Antes de comer por impulso, beba água e espere 5 minutos fazendo algo diferente. Muitas vezes a vontade passa.</p></div></div>
+<h2>Construção de hábitos</h2>
+<p>Hábitos saudáveis se constroem com repetição gentil, não com perfeição. Foque em uma pequena mudança por vez e celebre cada constância.</p>
+<h2>Exercício de autorreflexão</h2>
+<div class="card">
+${field("Em que momentos costumo comer sem fome física?","m6_q1","textarea","Ex.: à noite, quando estou ansiosa ou entediada.")}
+${field("Que outras formas posso usar para me acolher nesses momentos?","m6_q2","textarea","Ex.: caminhar, ligar para alguém, respirar, tomar um chá.")}
+${field("Uma pequena vitória que tive esta semana:","m6_q3","textarea","Ex.: percebi a fome emocional antes de comer.")}
+<span class="saved-note">Salvo ✓</span></div>
+<h2>Diário emocional</h2>
+<div class="card">${field("Como me senti hoje? (corpo e mente)","m6_diary","textarea","Escreva livremente. Este espaço é só seu.")}<span class="saved-note">Salvo ✓</span></div>
+<div class="tip warn">${ICON.heart}<div><b>Você não está sozinha:</b><p>Se a comida virar a principal forma de lidar com emoções, ou se houver tristeza persistente, buscar apoio psicológico é um ato de cuidado — fale com seu profissional de saúde.</p></div></div>
+${disc}
+${pager("m5","Módulo 5","m7","Módulo 7")}`;
+
+C.m7=`
+<div class="eyebrow">Módulo 7</div>
+<h1>Receitas práticas</h1>
+<p class="lead">45 receitas ricas em proteína, simples e pensadas para o seu tratamento — incluindo opções leves para dias de náusea.</p>
+<div class="rfilter" id="rfilter">
+<button class="chip on" data-f="all">Todas</button>
+<button class="chip" data-f="cafe">Cafés da manhã</button>
+<button class="chip" data-f="lanche">Lanches</button>
+<button class="chip" data-f="almoco">Almoços</button>
+<button class="chip" data-f="jantar">Jantares leves</button>
+<button class="chip" data-f="nausea">Dias de náusea</button>
+</div>
+<div class="recipes" id="recipes"></div>
+${disc}
+${pager("m6","Módulo 6","m8","Módulo 8")}`;
+
+C.m8=`
+<div class="eyebrow">Módulo 8</div>
+<h1>Plano de acompanhamento</h1>
+<p class="lead">Registrar sua jornada ajuda a enxergar o progresso além da balança. Tudo aqui é salvo no seu dispositivo.</p>
+<h2>Ponto de partida</h2>
+<div class="card grid g2">
+<div>${field("Data de início","m8_data","date")}</div>
+<div>${field("Peso inicial (kg)","m8_peso0","number","Ex.: 82")}</div>
+<div>${field("Altura (cm)","m8_altura","number","Ex.: 165")}</div>
+<div>${field("Cintura inicial (cm)","m8_cintura0","number","Ex.: 92")}</div>
+<span class="saved-note">Salvo ✓</span></div>
+<h2>Meus objetivos</h2>
+<div class="card">${field("O que quero alcançar com o tratamento (peso e além dele):","m8_obj","textarea","Ex.: chegar a 72 kg, ter mais disposição, melhorar exames, vestir aquela roupa.")}<span class="saved-note">Salvo ✓</span></div>
+<h2>Evolução mensal</h2>
+<table><thead><tr><th>Mês</th><th>Peso (kg)</th><th>Cintura (cm)</th><th>Observações</th></tr></thead><tbody>
+${[1,2,3,4,5,6].map(m=>`<tr><td>Mês ${m}</td><td><input class="f" data-fld="m8_m${m}_peso" placeholder="—" style="padding:7px 9px"></td><td><input class="f" data-fld="m8_m${m}_cint" placeholder="—" style="padding:7px 9px"></td><td><input class="f" data-fld="m8_m${m}_obs" placeholder="Energia, sono, humor..." style="padding:7px 9px"></td></tr>`).join("")}
+</tbody></table>
+<h2>Registro de sintomas</h2>
+<div class="card">${field("Sintomas da semana e o que ajudou:","m8_sint","textarea","Ex.: leve enjoo na quarta; melhorou com refeições menores.")}<span class="saved-note">Salvo ✓</span></div>
+<h2>Registro de hidratação</h2>
+<div class="card">${field("Média de copos de água por dia nesta semana:","m8_hidr","number","Ex.: 8")}<span class="saved-note">Salvo ✓</span></div>
+<h2>Registro alimentar</h2>
+<div class="card">${field("Como esteve minha alimentação esta semana? (proteína, tolerância, escolhas)","m8_alim","textarea","Escreva livremente.")}<span class="saved-note">Salvo ✓</span></div>
+<div class="tip">${ICON.star}<div><b>Parabéns por chegar até aqui!</b><p>Cuidar de você é o investimento mais importante. Use este guia sempre que precisar — ele é seu companheiro nessa jornada.</p></div></div>
+<div class="footer">
+<img src="img/logo-ana-full.png" alt="Ana Luisa Rocha — Nutricionista"><br>
+Guia Completo para Pacientes em Uso de Canetas Emagrecedoras • Material educativo digital.<br>
+Este conteúdo não substitui acompanhamento médico e nutricional individualizado.
+<div style="margin-top:14px"><button class="btn ghost" onclick="window.print()">${ICON.book} Salvar / imprimir em PDF</button>
+<button class="btn ghost" id="resetBtn" style="margin-left:8px">↺ Limpar meus dados</button></div>
+</div>
+${pager("m7","Módulo 7",null,null)}`;
+
+/* =================== RENDER =================== */
+const main=document.getElementById("main");
+PAGES.forEach(p=>main.insertAdjacentHTML("beforeend",`<section class="page" id="page-${p.id}">${C[p.id]}</section>`));
+
+/* sumário */
+const tocList=document.getElementById("tocList");
+PAGES.forEach((p,i)=>{
+  const num=p.id.startsWith("m")?`<span class="num">${p.id.slice(1)}</span>`:`<span class="num">•</span>`;
+  tocList.insertAdjacentHTML("beforeend",
+   `<a href="#${p.id}" data-id="${p.id}">${num}<span class="ix">${p.ic}</span><span><b>${p.t}</b><small>${p.st}</small></span><span class="dn">✓</span></a>`);
+});
+tocList.querySelectorAll("a").forEach(a=>a.addEventListener("click",e=>{e.preventDefault();go(a.dataset.id);}));
+
+/* =================== NAVEGAÇÃO =================== */
+const idx=id=>PAGES.findIndex(p=>p.id===id);
+function go(id){
+  const i=idx(id); if(i<0)return;
+  document.querySelectorAll(".page").forEach(s=>s.classList.remove("show"));
+  const pg=document.getElementById("page-"+id); pg.classList.add("show");
+  // running header
+  const rh=document.getElementById("runhead");
+  if(id==="capa"){rh.classList.add("hide");}
+  else{rh.classList.remove("hide");
+    document.getElementById("chLabel").textContent=PAGES[i].t;
+    document.getElementById("pgLabel").textContent="Página "+(i+1)+" de "+PAGES.length;}
+  document.getElementById("counter").textContent=(i+1)+" / "+PAGES.length;
+  // arrows
+  prevBtn.disabled=prevMini.disabled=(i===0);
+  nextBtn.disabled=nextMini.disabled=(i===PAGES.length-1);
+  set("last",id); markVisited(id); updateProgress(); updateToc(id);
+  window.scrollTo({top:0,behavior:"instant"});
+  closeToc();
+}
+function step(d){const i=idx(get("last","capa"))+d; if(i>=0&&i<PAGES.length)go(PAGES[i].id);}
+const prevBtn=document.getElementById("prevBtn"),nextBtn=document.getElementById("nextBtn");
+const prevMini=document.getElementById("prevMini"),nextMini=document.getElementById("nextMini");
+prevBtn.onclick=prevMini.onclick=()=>step(-1);
+nextBtn.onclick=nextMini.onclick=()=>step(1);
+document.addEventListener("keydown",e=>{if(e.key==="ArrowLeft")step(-1);if(e.key==="ArrowRight")step(1);});
+
+function markVisited(id){let v=get("visited",[]);if(!v.includes(id)){v.push(id);set("visited",v);}}
+function updateProgress(){const v=get("visited",[]);document.querySelector("#topbar i").style.width=Math.round(v.length/PAGES.length*100)+"%";}
+function updateToc(id){const v=get("visited",[]);tocList.querySelectorAll("a").forEach(a=>{a.classList.toggle("active",a.dataset.id===id);a.classList.toggle("done",v.includes(a.dataset.id));});}
+
+/* sumário open/close */
+const toc=document.getElementById("toc");
+function openToc(){toc.classList.add("open");}
+function closeToc(){toc.classList.remove("open");}
+document.getElementById("tocOpen").onclick=openToc;
+document.getElementById("tocClose").onclick=closeToc;
+toc.addEventListener("click",e=>{if(e.target===toc)closeToc();});
+
+/* =================== CHECKLISTS =================== */
+function initChecklists(){
+  document.querySelectorAll("ul.check").forEach(ul=>{
+    const key=ul.dataset.ck,state=get(key,{});
+    ul.querySelectorAll("li").forEach(li=>{
+      const i=li.dataset.i;
+      if(state[i]){li.classList.add("on");li.querySelector(".box").innerHTML="✓";}
+      li.addEventListener("click",()=>{const on=li.classList.toggle("on");li.querySelector(".box").innerHTML=on?"✓":"";const s=get(key,{});s[i]=on;set(key,s);});
+    });
+  });
+}
+/* =================== CAMPOS =================== */
+function initFields(){
+  document.querySelectorAll("[data-fld]").forEach(el=>{
+    const k=el.dataset.fld; if(get(k)!==undefined)el.value=get(k);
+    el.addEventListener("input",()=>{set(k,el.value);const n=el.closest(".card")?.querySelector(".saved-note");if(n){n.classList.add("show");clearTimeout(n._t);n._t=setTimeout(()=>n.classList.remove("show"),1200);}});
+  });
+}
+/* =================== QUIZ =================== */
+function buildQuiz(elId,key,data){
+  const wrap=document.getElementById(elId);if(!wrap)return;const saved=get(key,{});
+  data.forEach((item,i)=>{
+    const q=document.createElement("div");q.className="q";
+    q.innerHTML=`<p class="qt">${i+1}. ${item.q}</p><div class="opts"><div class="opt" data-v="true">Verdadeiro</div><div class="opt" data-v="false">Falso</div></div><div class="fb"></div>`;
+    wrap.appendChild(q);const fb=q.querySelector(".fb");
+    function answer(v){q.querySelectorAll(".opt").forEach(o=>o.classList.toggle("sel",o.dataset.v===String(v)));const ok=(v===item.a);fb.className="fb show "+(ok?"ok":"no");fb.textContent=(ok?"✓ Isso mesmo. ":"✗ Não é bem assim. ")+item.e;const s=get(key,{});s[i]=v;set(key,s);showScore();}
+    q.querySelectorAll(".opt").forEach(o=>o.addEventListener("click",()=>answer(o.dataset.v==="true")));
+    if(saved[i]!==undefined)answer(saved[i]);
+  });
+  const sc=document.createElement("div");sc.className="quiz-score";wrap.appendChild(sc);
+  function showScore(){const s=get(key,{});if(Object.keys(s).length<data.length)return;let ok=0;data.forEach((it,i)=>{if(s[i]===it.a)ok++;});sc.classList.add("show");sc.textContent=`Você acertou ${ok} de ${data.length}! ${ok===data.length?"Perfeito 🌸":"Reveja o conteúdo e tente de novo."}`;}
+  showScore();
+}
+/* =================== ÁGUA =================== */
+function todayKey(){const d=new Date();return "water_"+d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();}
+function renderCups(){
+  const wrap=document.getElementById("cups");if(!wrap)return;
+  const filled=get(todayKey(),0);wrap.innerHTML="";
+  for(let i=0;i<10;i++){const on=i<filled;const span=document.createElement("span");span.innerHTML=ICON.cup(on);span.style.cursor="pointer";span.addEventListener("click",()=>{set(todayKey(),(i+1===filled)?i:i+1);renderCups();});wrap.appendChild(span);}
+  document.getElementById("waterTot").textContent=(filled*250)+" ml";
+}
+function resetWater(){set(todayKey(),0);renderCups();}
+function calcAgua(){const p=parseFloat(document.getElementById("pesoAgua").value);const el=document.getElementById("metaAgua");if(!p||p<=0){el.textContent="Informe um peso válido.";return;}const ml=Math.round(p*35);el.textContent=`Sua meta: ~${(ml/1000).toFixed(1)} L por dia (cerca de ${Math.round(ml/250)} copos).`;set("pesoAgua",p);}
+/* =================== RECEITAS =================== */
+const RLABEL={cafe:"Café da manhã",lanche:"Lanche",almoco:"Almoço",jantar:"Jantar leve",nausea:"Dia de náusea"};
+function renderRecipes(f="all"){
+  const wrap=document.getElementById("recipes");if(!wrap)return;wrap.innerHTML="";
+  RECIPES.filter(r=>f==="all"||r.c===f).forEach(r=>{
+    wrap.insertAdjacentHTML("beforeend",`<div class="recipe"><div class="rh"><div class="tag">${RLABEL[r.c]}</div><h4>${r.n}</h4><span class="prot">${ICON.muscle.replace('width="22" height="22"','width="13" height="13"')} ${r.p} de proteína</span></div><div class="rb"><h5>Ingredientes</h5><ul>${r.ing.map(x=>`<li>${x}</li>`).join("")}</ul><h5>Modo de preparo</h5><p>${r.mp}</p></div></div>`);
+  });
+}
+function initRecipeFilter(){const f=document.getElementById("rfilter");if(!f)return;f.querySelectorAll(".chip").forEach(c=>c.addEventListener("click",()=>{f.querySelectorAll(".chip").forEach(x=>x.classList.remove("on"));c.classList.add("on");renderRecipes(c.dataset.f);}));}
+
+/* =================== INIT =================== */
+document.addEventListener("click",e=>{if(e.target&&e.target.id==="resetBtn"){if(confirm("Isso vai apagar todas as suas anotações, checklists e progresso salvos neste aparelho. Continuar?")){localStorage.removeItem(KEY);location.reload();}}});
+initChecklists();initFields();buildQuiz("quiz1","q1",QUIZ1);renderRecipes();initRecipeFilter();renderCups();
+if(get("pesoAgua")){document.getElementById("pesoAgua").value=get("pesoAgua");calcAgua();}
+go(get("last","capa"));
+</script>
+</body>
+</html>
